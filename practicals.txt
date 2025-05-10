@@ -1,0 +1,359 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4th practical 
+
+import pandas as pd
+
+df=pd.read_csv('BostonHousing.csv')
+
+df
+
+df.head()
+
+print(df.columns)
+
+X = df.drop('MEDV', axis=1)
+Y = df['MEDV']
+
+X.shape
+
+from sklearn.model_selection import train_test_split
+
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=0)
+
+X_train
+
+X_train.head()
+
+X_train.shape
+
+X_test.shape
+
+from sklearn.impute import SimpleImputer
+
+from sklearn.impute import SimpleImputer
+
+
+
+X_train = imputer.fit_transform(X_train)
+
+
+
+
+X_train = imputer.fit_transform(X_train)
+
+X_test = imputer.transform(X_test)
+
+from sklearn.linear_model import LinearRegression
+
+regressor=LinearRegression()
+
+regressor.fit(X_train,Y_train)
+
+regressor.coef_
+
+regressor.intercept_
+
+Y_pred = regressor.predict(X_test)
+
+Y_pred.shape
+
+result=pd.DataFrame({'Actual':Y_test,'Producted':Y_pred})
+
+result
+
+residual_error=(Y_test-Y_pred)
+
+residual_error
+
+residual_error
+
+sum(residual_error)/len(residual_error)
+
+from sklearn.metrics import mean_absolute_error
+mean_absolute_error(Y_pred,Y_test)
+
+from sklearn.metrics import mean_absolute_percentage_error
+
+mean_absolute_percentage_error(Y_test,Y_pred)
+
+regressor.score(X_test,Y_test)
+
+
+#pip install scikit-Learn-U
+#for the installation of scikit
+
+from sklearn.metrics import r2_score
+
+r2_score(Y_test,Y_pred)
+
+new=[[0.7258,0,8.64,0,0.538,5.727,69.6,3.7965,4,307,22,391.95,11.28]]
+
+new
+
+regressor.predict(new)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+5th practical 
+Social Network Ads Dataset – Kaggle
+
+import pandas as pd
+df = pd.read_csv('Social_Network_Ads.csv')
+df
+
+
+#input data
+x=df[['Age','EstimatedSalary']]
+#output data
+y=df['Purchased']
+
+
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+x_scaled = scaler.fit_transform(x)
+
+from sklearn.model_selection import train_test_split
+
+x_train, x_test, y_train, y_test = train_test_split(x_scaled, y, test_size=0.25, random_state=0)
+
+x_train
+y_train
+
+from sklearn.linear_model import LogisticRegression
+
+import seaborn as sns
+sns.countplot(x=y)
+
+y.value_counts()
+
+classifier = LogisticRegression()
+
+classifier.fit(x_train,y_train)
+
+y_pred = classifier.predict(x_test)
+
+y_train.shape
+
+x_train.shape
+
+y_pred
+
+import matplotlib.pyplot as plt
+
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.scatter(x['Age'],x['EstimatedSalary'],c=y)
+
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+x_scaled = scaler.fit_transform(x)
+
+pd.DataFrame(x_scaled).describe()
+
+
+
+plt.xlabel('Age')
+plt.ylabel('Salary')
+plt.scatter(x_scaled[:,0],x_scaled[:,1],c=y)
+
+
+from sklearn.metrics import confusion_matrix
+
+
+confusion_matrix(y_test,y_pred)
+
+y_test.value_counts()
+
+from sklearn.metrics import ConfusionMatrixDisplay
+
+
+ConfusionMatrixDisplay.from_estimator(classifier, x_test, y_test)
+
+
+from sklearn.metrics import accuracy_score
+accuracy_score(y_test,y_pred)
+
+
+from sklearn.metrics import classification_report
+
+
+print(classification_report(y_test,y_pred))
+
+new1=[[26,34000]]
+new2=[[57,138000]]
+
+
+classifier.predict(scaler.transform(new1))
+
+
+classifier.predict(scaler.transform(new2))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+8th practical 
+
+import seaborn as sns
+df= sns.load_dataset('titanic')
+
+df
+
+df=df[['survived','class','sex','age','fare']]
+
+df
+
+sns.jointplot(x='age',y='fare',data=df)
+
+sns.jointplot(x='age',y='fare',data=df,hue='survived')
+
+sns.jointplot(x='age',y='fare',data=df,hue='class')
+
+sns.pairplot(df,hue='sex')
+
+sns.countplot(x=df['sex'])
+
+sns.countplot(x=df['class'])
+
+sns.barplot(x='sex',y='survived',data=df)
+
+sns.histplot(df['fare'])
+
+sns.kdeplot(df['fare,]
+
+
+
+9th practical 
+
+import seaborn as sns
+
+df = sns. load_dataset('titanic')
+
+df= df[['sex','age','survived']]
+
+df
+
+
+sns.boxplot(x='sex',y='age',data=df)
+
+
+sns.boxplot(x='sex',y='age',hue='survived', data=df)
+
+
+
+
+
+
+
+
+
+
+
+
+
+10th practical 
+
+
+sns.boxplot(x=df['petal_width']);
+
+df =sns.load_dataset('iris')
+
+df
+
+df.columns
+
+df.info()
+
+df.dtypes
+
+sns.pairplot(df,hue='species')
+
+sns.pairplot(df)
+
+sns.pairplot(df,hue='species',diag_kind='hist')
+
+sns.histplot(df['sepal_length'],kde=True)
+
+
+sns.histplot(df['sepal_width'],kde=True)
+
+sns.kdeplot(df['sepal_width'])
+
+sns.histplot(df['petal_length'],kde=True)
+
+sns.histplot(df['petal_width'],kde=True)
+
+sns.kdeplot(df['petal_width'])
+
+sns.boxplot(x=df['sepal_length']);
+
+sns.boxplot(x=df['sepal_width']);
+
+sns.boxplot(x=df['petal_length']);
+
+sns.boxplot(x=df['petal_width']);
+
+sns.boxplot(x=df['petal_width']);
+
+
+
