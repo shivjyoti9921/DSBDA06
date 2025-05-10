@@ -637,7 +637,7 @@ sns.barplot(x='sex',y='survived',data=df)
 
 sns.histplot(df['fare'])
 
-sns.kdeplot(df['fare,]
+sns.kdeplot(df['fare'])
 
 
 
