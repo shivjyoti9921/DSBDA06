@@ -1,0 +1,240 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+
+
+
+# 1. Load dataset
+data = pd.read_csv("letter-recognition.data", header=None)
+
+
+# 2. Split features & labels
+X = data.iloc[:, 1:].values
+y = data.iloc[:, 0].values
+
+
+# 3. Encode labels (A-Z → 0-25)
+le = LabelEncoder()
+y = le.fit_transform(y)
+
+# 4. Convert to float
+X = X.astype('float32')
+
+
+# 5. Train-test split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+
+
+
+
+# 6. Build DNN model (MULTICLASS)
+model = Sequential()
+
+model.add(Dense(64, activation='relu', input_shape=(16,)))
+model.add(Dense(64, activation='relu'))
+model.add(Dense(26, activation='softmax'))  # 26 classes (A-Z)
+
+
+C:\Users\jagta\AppData\Roaming\Python\Python313\site-packages\keras\src\layers\core\dense.py:95: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(activity_regularizer=activity_regularizer, **kwargs)
+
+
+# 7. Compile model
+model.compile(
+    optimizer='adam',
+    loss='sparse_categorical_crossentropy',
+    metrics=['accuracy']
+)
+
+
+
+# 8. Train model
+model.fit(X_train, y_train, epochs=25, batch_size=32)
+
+
+
+
+# 9. Evaluate model
+loss, acc = model.evaluate(X_test, y_test)
+print("Accuracy:", acc)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# a. IMPORTING NECESSARY PACKAGES
+import tensorflow as tf
+from tensorflow import keras
+import matplotlib.pyplot as plt
+import random
+
+# b. LOAD THE TRAINING AND TESTING DATA (MNIST)
+mnist = tf.keras.datasets.mnist
+
+(x_train, y_train), (x_test, y_test) = mnist.load_data()
+
+# Normalize the data
+x_train = x_train / 255.0
+x_test = x_test / 255.0
+
+# c. DEFINE THE NETWORK ARCHITECTURE USING KERAS
+model = keras.Sequential([
+    keras.layers.Flatten(input_shape=(28, 28)),
+    keras.layers.Dense(128, activation="relu"),
+    keras.layers.Dense(10, activation="softmax")
+])
+
+# Display model summary
+model.summary()
+
+# d. TRAIN THE MODEL USING SGD
+model.compile(
+    optimizer="sgd",
+    loss="sparse_categorical_crossentropy",
+    metrics=["accuracy"]
+)
+
+history = model.fit(
+    x_train,
+    y_train,
+    validation_data=(x_test, y_test),
+    epochs=10
+)
+
+# e. EVALUATE THE NETWORK
+test_loss, test_acc = model.evaluate(x_test, y_test)
+
+print("Loss = %.3f" % test_loss)
+print("Accuracy = %.3f" % test_acc)
+
+# Random test image prediction
+n = random.randint(0, 9999)
+
+plt.imshow(x_test[n], cmap="gray")
+plt.title("Test Image")
+plt.show()	
+
+# Predict all test images
+predicted_value = model.predict(x_test)
+
+
+
+# Select index number
+n = 0
+# Print predicted class
+print("Predicted Value:", predicted_value[n])
+print("Predicted Digit:", predicted_value[n].argmax())
+print("Actual Digit:", y_test[n])
+
+# Plotting Training Accuracy
+plt.plot(history.history['accuracy'])
+plt.plot(history.history['val_accuracy'])
+
+plt.title('Model Accuracy')
+plt.ylabel('Accuracy')
+plt.xlabel('Epoch')
+
+plt.legend(['Train', 'Validation'], loc='upper right')
+plt.show()
+
+# Plotting Training Loss
+plt.plot(history.history['loss'])
+plt.plot(history.history['val_loss'])
+
+plt.title('Model Loss')
+plt.ylabel('Loss')
+plt.xlabel('Epoch')
+
+plt.legend(['Train', 'Validation'], loc='upper left')
+plt.show()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Downloading data from https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
+11490434/11490434 ━━━━━━━━━━━━━━━━━━━━ 4s 0us/step
+/Users/sohamkore/tf_env/lib/python3.10/site-packages/keras/src/layers/reshaping/flatten.py:37: UserWarning: Do not pass an `input_shape`/`input_dim` argument to a layer. When using Sequential models, prefer using an `Input(shape)` object as the first layer in the model instead.
+  super().__init__(**kwargs)
+Model: "sequential"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━┓
+┃ Layer (type)                    ┃ Output Shape           ┃       Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━┩
+│ flatten (Flatten)               │ (None, 784)            │             0 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense (Dense)                   │ (None, 128)            │       100,480 │
+├─────────────────────────────────┼────────────────────────┼───────────────┤
+│ dense_1 (Dense)                 │ (None, 10)             │         1,290 │
+└─────────────────────────────────┴────────────────────────┴───────────────┘
+ Total params: 101,770 (397.54 KB)
+ Trainable params: 101,770 (397.54 KB)
+ Non-trainable params: 0 (0.00 B)
+
+Epoch 1/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 624us/step - accuracy: 0.8400 - loss: 0.6398 - val_accuracy: 0.9038 - val_loss: 0.3531
+Epoch 2/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 585us/step - accuracy: 0.9078 - loss: 0.3316 - val_accuracy: 0.9190 - val_loss: 0.2880
+Epoch 3/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 592us/step - accuracy: 0.9207 - loss: 0.2820 - val_accuracy: 0.9295 - val_loss: 0.2536
+Epoch 4/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 590us/step - accuracy: 0.9298 - loss: 0.2520 - val_accuracy: 0.9338 - val_loss: 0.2367
+Epoch 5/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 591us/step - accuracy: 0.9366 - loss: 0.2297 - val_accuracy: 0.9407 - val_loss: 0.2146
+Epoch 6/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 599us/step - accuracy: 0.9411 - loss: 0.2121 - val_accuracy: 0.9448 - val_loss: 0.1996
+Epoch 7/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 580us/step - accuracy: 0.9454 - loss: 0.1967 - val_accuracy: 0.9468 - val_loss: 0.1887
+Epoch 8/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 575us/step - accuracy: 0.9487 - loss: 0.1841 - val_accuracy: 0.9510 - val_loss: 0.1753
+Epoch 9/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 571us/step - accuracy: 0.9516 - loss: 0.1728 - val_accuracy: 0.9524 - val_loss: 0.1665
+Epoch 10/10
+1875/1875 ━━━━━━━━━━━━━━━━━━━━ 1s 575us/step - accuracy: 0.9545 - loss: 0.1627 - val_accuracy: 0.9530 - val_loss: 0.1614
+313/313 ━━━━━━━━━━━━━━━━━━━━ 0s 403us/step - accuracy: 0.9530 - loss: 0.1614
+Loss = 0.161
+Accuracy = 0.953
+
+
+313/313 ━━━━━━━━━━━━━━━━━━━━ 0s 330us/step
+Predicted Value: [1.09029206e-05 2.42105343e-05 5.06353285e-03 1.25307679e-05
+ 4.81732935e-03 1.20160934e-04 9.89586532e-01 2.47746852e-04
+ 4.87631332e-05 6.83815888e-05]
+Predicted Digit: 6
+Actual Digit: 6
+
+
+
+
+
+https://storage.googleapis.com/tensorflow/tf-keras-datasets/mnist.npz
